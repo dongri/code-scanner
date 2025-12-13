@@ -8,7 +8,7 @@
 PRODUCT_NAME = code_scanner
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.dongri.codeScanApp
+PRODUCT_BUNDLE_IDENTIFIER = org.dongri.code-scanner
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2025 com.dongri. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2025 org.dongri. All rights reserved.
