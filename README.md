@@ -1,5 +1,9 @@
 # Code Scanner
 
+<p align="center">
+  <img src="code-scanner.png" alt="Code Scanner" width="300">
+</p>
+
 A Flutter app for scanning QR codes and barcodes.
 
 ## 📱 Features
