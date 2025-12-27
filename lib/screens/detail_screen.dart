@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:barcode_widget/barcode_widget.dart';
 import '../models/scan_result.dart';
 import '../services/scan_history_service.dart';
 import '../theme/app_theme.dart';
@@ -30,8 +32,11 @@ class DetailScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(20),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [_buildDataCard(context)],
+                    children: [
+                      _buildDataCard(context),
+                      const SizedBox(height: 20),
+                      _buildGeneratedCodeCard(context),
+                    ],
                   ),
                 ),
               ),
@@ -230,6 +235,124 @@ class DetailScreen extends StatelessWidget {
                 fontSize: 14,
                 color: AppTheme.textPrimary,
                 height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGeneratedCodeCard(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.cardDark,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.borderColor, width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: (result.scanType == ScanType.qrCode
+                          ? AppTheme.primaryCyan
+                          : AppTheme.accentGreen)
+                      .withAlpha(26),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Icon(
+                  result.scanType == ScanType.qrCode
+                      ? Icons.qr_code_2
+                      : Icons.view_week,
+                  color: result.scanType == ScanType.qrCode
+                      ? AppTheme.primaryCyan
+                      : AppTheme.accentGreen,
+                  size: 16,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                result.scanType == ScanType.qrCode
+                    ? 'GENERATED QR CODE'
+                    : 'GENERATED BARCODE',
+                style: TextStyle(
+                  fontFamily: 'monospace',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: result.scanType == ScanType.qrCode
+                      ? AppTheme.primaryCyan
+                      : AppTheme.accentGreen,
+                  letterSpacing: 2,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: (result.scanType == ScanType.qrCode
+                          ? AppTheme.primaryCyan
+                          : AppTheme.accentGreen)
+                      .withAlpha(51),
+                  blurRadius: 20,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Center(
+              child: result.scanType == ScanType.qrCode
+                  ? QrImageView(
+                      data: result.data,
+                      version: QrVersions.auto,
+                      size: 200.0,
+                      backgroundColor: Colors.white,
+                      eyeStyle: const QrEyeStyle(
+                        eyeShape: QrEyeShape.square,
+                        color: Color(0xFF1A1A2E),
+                      ),
+                      dataModuleStyle: const QrDataModuleStyle(
+                        dataModuleShape: QrDataModuleShape.square,
+                        color: Color(0xFF1A1A2E),
+                      ),
+                    )
+                  : BarcodeWidget(
+                      barcode: Barcode.code128(),
+                      data: result.data,
+                      width: 280,
+                      height: 100,
+                      color: const Color(0xFF1A1A2E),
+                      backgroundColor: Colors.white,
+                      drawText: true,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1A1A2E),
+                      ),
+                    ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Center(
+            child: Text(
+              result.scanType == ScanType.qrCode
+                  ? 'Scan this QR code to get the data'
+                  : 'Scan this barcode to get the data',
+              style: const TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 12,
+                color: AppTheme.textSecondary,
+                letterSpacing: 0.5,
               ),
             ),
           ),
